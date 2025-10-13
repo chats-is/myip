@@ -29,7 +29,7 @@ pnpm update-db
 
 ## Redis cache
 
-Implement Redis caching for Baidu and Meituan IP lookup services, and add `REDIS_URL` to the .env file.
+Implement Redis caching for Meituan IP lookup services, and add `REDIS_URL` to the .env file.
 
 ## Deploy on Vercel
 
