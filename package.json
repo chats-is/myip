@@ -15,6 +15,7 @@
     "update-db": "node ./lib/download/geocn.js && node ./lib/download/geolite2.js && node ./lib/download/qqwry.js"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "@vercel/analytics": "^1.5.0",
     "ioredis": "^5.7.0",
     "ipdb": "^0.3.3",

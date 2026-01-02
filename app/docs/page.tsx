@@ -68,8 +68,8 @@ export default function Page() {
         </li>
         <li>
           <strong>source</strong> (optional, query parameter): Specifies the
-          data source. Allowed values: <code>qqwry</code>,{' '}
-          <code>meituan</code>, <code>ipapi</code>.
+          data source. Allowed values: <code>qqwry</code>, <code>meituan</code>,{' '}
+          <code>ipapi</code>.
         </li>
         <li>
           <strong>callback</strong> (optional, query parameter): If provided,
@@ -173,8 +173,8 @@ export default function Page() {
         </li>
         <li>
           <strong>source</strong>: Source of the data (<code>maxmind</code>,{' '}
-          <code>geocn</code>, <code>qqwry</code>,{' '}
-          <code>meituan</code>) (required).
+          <code>geocn</code>, <code>qqwry</code>, <code>meituan</code>)
+          (required).
         </li>
         <li>
           <strong>updatedAt</strong>: Timestamp of the last update.

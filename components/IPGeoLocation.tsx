@@ -1,6 +1,20 @@
 'use client';
 
 import React, { FormEvent, useState } from 'react';
+import {
+  Browser,
+  Buildings,
+  Check,
+  Clock,
+  Copy,
+  Desktop,
+  Globe,
+  Hash,
+  HouseLine,
+  MapPin,
+  MapTrifold,
+  WifiHigh
+} from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import isFQDN from 'validator/lib/isFQDN';
 import isIP from 'validator/lib/isIP';
@@ -15,6 +29,7 @@ interface IPGeoLocationProps {
 export function IPGeoLocation({ defaultValue }: IPGeoLocationProps) {
   const [data, setData] = useState(defaultValue);
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [isCopied, setIsCopied] = useState<boolean>(false);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -38,6 +53,13 @@ export function IPGeoLocation({ defaultValue }: IPGeoLocationProps) {
     }
 
     setLoading(false);
+  }
+
+  function copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text).then(() => {
+      setIsCopied(true);
+      setTimeout(() => setIsCopied(false), 2000);
+    });
   }
 
   return (
@@ -73,115 +95,149 @@ export function IPGeoLocation({ defaultValue }: IPGeoLocationProps) {
         </div>
       </form>
       {data && (
-        <table className="w-full overflow-hidden rounded-lg dark:bg-slate-900">
-          <tbody>
-            <tr className="border-b-2 border-white last:border-b-0 dark:border-black">
-              <td className="w-28 bg-slate-50 px-2 py-1 text-right text-slate-600 dark:border-r-2 dark:border-black dark:bg-slate-800 dark:text-slate-500">
-                IP
-              </td>
-              <td className="px-2 py-1 text-slate-800 dark:text-slate-400">
-                <div className="break-all">{data.ip}</div>
-              </td>
-            </tr>
+        <div className="w-full space-y-4">
+          {/* IP Address Card - Prominent Display */}
+          <div className="rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 p-4 text-white shadow-lg dark:from-blue-700 dark:to-blue-800">
+            <div className="flex items-center gap-2 text-blue-200">
+              <Hash size={14} />
+              <span className="text-xs font-medium uppercase tracking-wide">
+                IP Address
+              </span>
+            </div>
+            <div className="mt-2 flex items-center gap-3">
+              <span className="break-all text-2xl font-bold tracking-tight">
+                {data.ip}
+              </span>
+              <button
+                type="button"
+                onClick={() => copyToClipboard(data.ip)}
+                className="p-1 text-blue-200 transition-colors hover:text-white"
+                title="Copy IP"
+              >
+                {isCopied ? <Check size={18} /> : <Copy size={18} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Details List */}
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900">
             {data.hostname && (
-              <tr className="border-b-2 border-white last:border-b-0 dark:border-black">
-                <td className="bg-slate-50 px-2 py-1 text-right text-slate-600 dark:border-r-2 dark:border-black dark:bg-slate-800 dark:text-slate-500">
-                  Hostname
-                </td>
-                <td className="px-2 py-1 text-slate-800 dark:text-slate-400">
+              <div className="flex items-center gap-4 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+                <div className="flex w-24 items-center gap-2 text-slate-400">
+                  <Desktop size={16} />
+                  <span className="text-xs font-medium uppercase tracking-wide">
+                    Hostname
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1 truncate text-sm font-medium text-slate-700 dark:text-slate-300">
                   {data.hostname}
-                </td>
-              </tr>
-            )}
-            {data.city_name && (
-              <tr className="border-b-2 border-white last:border-b-0 dark:border-black">
-                <td className="bg-slate-50 px-2 py-1 text-right text-slate-600 dark:border-r-2 dark:border-black dark:bg-slate-800 dark:text-slate-500">
-                  City
-                </td>
-                <td className="px-2 py-1 text-slate-800 dark:text-slate-400">
-                  {data.city_name}
-                </td>
-              </tr>
-            )}
-            {data.postal && (
-              <tr className="border-b-2 border-white last:border-b-0 dark:border-black">
-                <td className="bg-slate-50 px-2 py-1 text-right text-slate-600 dark:border-r-2 dark:border-black dark:bg-slate-800 dark:text-slate-500">
-                  Postal
-                </td>
-                <td className="px-2 py-1 text-slate-800 dark:text-slate-400">
-                  {data.postal}
-                </td>
-              </tr>
-            )}
-            {data.region_name && (
-              <tr className="border-b-2 border-white last:border-b-0 dark:border-black">
-                <td className="bg-slate-50 px-2 py-1 text-right text-slate-600 dark:border-r-2 dark:border-black dark:bg-slate-800 dark:text-slate-500">
-                  Region
-                </td>
-                <td className="px-2 py-1 text-slate-800 dark:text-slate-400">
-                  {data.region_name}
-                </td>
-              </tr>
+                </div>
+              </div>
             )}
             {data.country_name && (
-              <tr className="border-b-2 border-white last:border-b-0 dark:border-black">
-                <td className="bg-slate-50 px-2 py-1 text-right text-slate-600 dark:border-r-2 dark:border-black dark:bg-slate-800 dark:text-slate-500">
-                  Country
-                </td>
-                <td className="px-2 py-1 text-slate-800 dark:text-slate-400">
+              <div className="flex items-center gap-4 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+                <div className="flex w-24 items-center gap-2 text-slate-400">
+                  <Globe size={16} />
+                  <span className="text-xs font-medium uppercase tracking-wide">
+                    Country
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1 truncate text-sm font-medium text-slate-700 dark:text-slate-300">
                   {data.country_name}
-                </td>
-              </tr>
+                </div>
+              </div>
             )}
-            {data.isp ? (
-              <tr className="border-b-2 border-white last:border-b-0 dark:border-black">
-                <td className="bg-slate-50 px-2 py-1 text-right text-slate-600 dark:border-r-2 dark:border-black dark:bg-slate-800 dark:text-slate-500">
-                  ISP
-                </td>
-                <td className="hyphens-auto break-words px-2 py-1 text-slate-800 dark:text-slate-400">
-                  {data.isp}
-                </td>
-              </tr>
-            ) : (
-              <tr className="border-b-2 border-white last:border-b-0 dark:border-black">
-                <td className="bg-slate-50 px-2 py-1 text-right text-slate-600 dark:border-r-2 dark:border-black dark:bg-slate-800 dark:text-slate-500">
-                  AS
-                </td>
-                <td className="hyphens-auto break-words px-2 py-1 text-slate-800 dark:text-slate-400">
-                  {data.org}
-                </td>
-              </tr>
+            {data.region_name && (
+              <div className="flex items-center gap-4 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+                <div className="flex w-24 items-center gap-2 text-slate-400">
+                  <MapTrifold size={16} />
+                  <span className="text-xs font-medium uppercase tracking-wide">
+                    Region
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1 truncate text-sm font-medium text-slate-700 dark:text-slate-300">
+                  {data.region_name}
+                </div>
+              </div>
+            )}
+            {data.city_name && (
+              <div className="flex items-center gap-4 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+                <div className="flex w-24 items-center gap-2 text-slate-400">
+                  <Buildings size={16} />
+                  <span className="text-xs font-medium uppercase tracking-wide">
+                    City
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1 truncate text-sm font-medium text-slate-700 dark:text-slate-300">
+                  {data.city_name}
+                </div>
+              </div>
+            )}
+            {data.postal && (
+              <div className="flex items-center gap-4 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+                <div className="flex w-24 items-center gap-2 text-slate-400">
+                  <HouseLine size={16} />
+                  <span className="text-xs font-medium uppercase tracking-wide">
+                    Postal
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1 truncate text-sm font-medium text-slate-700 dark:text-slate-300">
+                  {data.postal}
+                </div>
+              </div>
+            )}
+            {(data.isp || data.org) && (
+              <div className="flex items-center gap-4 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+                <div className="flex w-24 items-center gap-2 text-slate-400">
+                  <WifiHigh size={16} />
+                  <span className="text-xs font-medium uppercase tracking-wide">
+                    {data.isp ? 'ISP' : 'AS'}
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1 truncate text-sm font-medium text-slate-700 dark:text-slate-300">
+                  {data.isp || data.org}
+                </div>
+              </div>
             )}
             {data.latitude && data.longitude && (
-              <tr className="border-b-2 border-white last:border-b-0 dark:border-black">
-                <td className="bg-slate-50 px-2 py-1 text-right text-slate-600 dark:border-r-2 dark:border-black dark:bg-slate-800 dark:text-slate-500">
-                  Location
-                </td>
-                <td className="px-2 py-1 text-slate-800 dark:text-slate-400">
-                  {[data.latitude, data.longitude].filter(Boolean).join(', ')}
-                </td>
-              </tr>
+              <div className="flex items-center gap-4 border-b border-slate-100 px-4 py-3 dark:border-slate-800">
+                <div className="flex w-24 items-center gap-2 text-slate-400">
+                  <MapPin size={16} />
+                  <span className="text-xs font-medium uppercase tracking-wide">
+                    Location
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1 truncate text-sm font-medium text-slate-700 dark:text-slate-300">
+                  {data.latitude}, {data.longitude}
+                </div>
+              </div>
             )}
             {data.timezone && (
-              <tr className="border-b-2 border-white last:border-b-0 dark:border-black">
-                <td className="bg-slate-50 px-2 py-1 text-right text-slate-600 dark:border-r-2 dark:border-black dark:bg-slate-800 dark:text-slate-500">
-                  Timezone
-                </td>
-                <td className="px-2 py-1 text-slate-800 dark:text-slate-400">
+              <div className="flex items-center gap-4 border-b border-slate-100 px-4 py-3 last:border-b-0 dark:border-slate-800">
+                <div className="flex w-24 items-center gap-2 text-slate-400">
+                  <Clock size={16} />
+                  <span className="text-xs font-medium uppercase tracking-wide">
+                    Timezone
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1 truncate text-sm font-medium text-slate-700 dark:text-slate-300">
                   {data.timezone}
-                </td>
-              </tr>
+                </div>
+              </div>
             )}
-            <tr className="border-b-2 border-white last:border-b-0 dark:border-black">
-              <td className="bg-slate-50 px-2 py-1 text-right text-slate-600 dark:border-r-2 dark:border-black dark:bg-slate-800 dark:text-slate-500">
-                User Agent
-              </td>
-              <td className="px-2 py-1 text-slate-800 dark:text-slate-400">
+            <div className="flex items-start gap-4 px-4 py-3">
+              <div className="flex w-24 shrink-0 items-center gap-2 text-slate-400">
+                <Browser size={16} />
+                <span className="text-xs font-medium uppercase tracking-wide">
+                  UA
+                </span>
+              </div>
+              <div className="min-w-0 flex-1 break-all text-xs text-slate-500 dark:text-slate-400">
                 {data.user_agent}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
       <div className="mt-3 w-full rounded-lg bg-slate-100 p-4 text-slate-800 dark:bg-slate-900 dark:text-slate-400">
         <code>
