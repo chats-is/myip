@@ -24,7 +24,7 @@ export const qqwryQuery = (ip: string): IPGeoLocationData | undefined => {
       longitude: geolocation.longitude,
       postal: geolocation.postal,
       isp: qqwryResponse.isp_domain
-        ? ISP_MAP[qqwryResponse.isp_domain]
+        ? ISP_MAP[qqwryResponse.isp_domain] || qqwryResponse.isp_domain
         : qqwryResponse.isp_domain,
       source: 'qqwry'
     };
