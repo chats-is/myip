@@ -1,5 +1,5 @@
 import { getLookups } from '@/lib/db';
-import { GEOLOCATION_MAP } from '@/lib/format';
+import { GEOLOCATION_MAP, ISP_MAP } from '@/lib/format';
 import { CHINA, getNameByLang } from '@/lib/lang';
 import { IPGeoLocationData } from '@/lib/types';
 import { pruneObject } from '@/lib/utils';
@@ -24,7 +24,9 @@ export const geocnQuery = (
         city_name: cityName,
         district_code: cnResponse.districtsCode?.toString(),
         district_name: cnResponse.districts,
-        isp: cnResponse.isp,
+        isp: cnResponse.isp
+          ? ISP_MAP[cnResponse.isp] || cnResponse.isp
+          : cnResponse.isp,
         source: 'geocn'
       };
 
